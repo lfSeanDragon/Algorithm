@@ -1,20 +1,20 @@
 #include <iostream>
 using namespace std;
 
-//¼Ó·¨
-//(µİ¹é·½·¨)
+ /*******åŠ æ³•*********/
+//(é€’å½’æ–¹æ³•)
 int getAddNumber(int a, int b)
 {
 	if (b == 0) return a;
-	int sum = a^b;
-	//¿ÉÒÔµÃµ½½øÎ»
+	int sum = a ^ b;
+	//å¯ä»¥å¾—åˆ°è¿›ä½
 	int carray = (a & b) << 1;
 	return  getAddNumber(sum, carray);
 }
-//(·Çµİ¹é·½·¨)
+//(éé€’å½’æ–¹æ³•)
 int getAddNumber1(int a, int b) {
 	while (b) {
-		// ·ÀÖ¹ AddressSanitizer ¶ÔÓĞ·ûºÅ×óÒÆµÄÒç³ö±£»¤´¦Àí
+		// é˜²æ­¢ AddressSanitizer å¯¹æœ‰ç¬¦å·å·¦ç§»çš„æº¢å‡ºä¿æŠ¤å¤„ç†
 		auto c = ((unsigned int)a & b) << 1;
 		a = a ^ b;
 		b = c;
@@ -30,35 +30,35 @@ int getAddNumber2(int a, int b) {
 	sum = a ^ b;
 	while (carry) {
 		int temp = sum;
-		//×î¸ßÎ»Îª1¼´¸ºÊı×óÒÆ»á±¨´í, Ê¹carry×î¸ßÎ»ÓÀÔ¶Îª0
+		//æœ€é«˜ä½ä¸º1å³è´Ÿæ•°å·¦ç§»ä¼šæŠ¥é”™, ä½¿carryæœ€é«˜ä½æ°¸è¿œä¸º0
 		carry = carry & (-1);
 		sum = sum ^ (carry << 1);
 		carry = temp & (carry << 1);
 	}
 	return sum;
 }
-//¼õ·¨
+
+ /*******å‡æ³•*********/
 int getSubNUm(int a, int b)
 {
 	while (b != 0)
 	{
-		// È¥µô±»¼õÊıºÍ¼õÊıÖĞÍ¬Îª1µÄÎ»
+		// å»æ‰è¢«å‡æ•°å’Œå‡æ•°ä¸­åŒä¸º1çš„ä½
 		int sameNum = a & b;
 		a ^= sameNum;
 		b ^= sameNum;
-		// ´ËÊ±£¬a ºÍ b ²»´æÔÚÍ¬Ê±Îª1 µÄÎ»
-		// 0 - 1 ºÍ 1 - 0 ¶¼Îª1
-		a |= b; // µÃµ½Ïà¼õµÄÁÙÊ±½á¹û£¨²»¿¼ÂÇ½èÎ»£©
-		b = b << 1; // ¼õÊıÎª1 Ê±£¬±ØÓĞ½èÎ»
+		// æ­¤æ—¶ï¼Œa å’Œ b ä¸å­˜åœ¨åŒæ—¶ä¸º1 çš„ä½
+		// 0 - 1 å’Œ 1 - 0 éƒ½ä¸º1
+		a |= b; // å¾—åˆ°ç›¸å‡çš„ä¸´æ—¶ç»“æœï¼ˆä¸è€ƒè™‘å€Ÿä½ï¼‰
+		b = b << 1; // å‡æ•°ä¸º1 æ—¶ï¼Œå¿…æœ‰å€Ÿä½
 	}
 	return a;
 }
-
-
+ 
 int maxNumFlag()
 {
 	int bitsOfByte = 8;
-
+ 
 	int maxNum = 0x80;
 	int tmp = maxNum;
 	while (tmp != 0)
@@ -68,147 +68,142 @@ int maxNumFlag()
 	}
 	return maxNum;
 }
-
-//³Ë·¨
+ 
+/*******ä¹˜æ³•*********/
 int getMultip(int a, int b)
 {
-	// 1.ÏÈÖ»¿¼ÂÇÕıÕûÊıµÄÏà³Ë
-	// 2.¿¼ÂÇÕı¸ºÇé¿öºÍÒç³öÎÊÌâ
-
+	// 1.å…ˆåªè€ƒè™‘æ­£æ•´æ•°çš„ç›¸ä¹˜
+	// 2.è€ƒè™‘æ­£è´Ÿæƒ…å†µå’Œæº¢å‡ºé—®é¢˜
 	int maxNum = maxNumFlag();
-	int flag_a = 1;
+	int flagA = 1;
 	if ((maxNum & a) != 0)
 	{
-		flag_a = 0; // ¸ºÊı
+		flagA = 0; // è´Ÿæ•°
 		a = getAddNumber(~a, 1);
 	}
-
-	int flag_b = 1;
+ 
+	int flagB = 1;
 	if ((maxNum & b) != 0)
 	{
-		flag_b = 0;
+		flagB = 0;
 		b = getAddNumber(~b, 1);
 	}
-
+ 
 	int result = 0;
 	for (int bits = 1; bits != 0; bits <<= 1)
 	{
 		if ((bits & b) != 0)
 		{
 			result = getAddNumber(result, a);
-			if ((result & maxNum) != 0
-				|| (a & maxNum) != 0)
+			if ((result & maxNum) != 0 || (a & maxNum) != 0)
 			{
-				cout << "Êı¾İ¹ı´ó£¡" << endl;
+				cout << "æ•°æ®è¿‡å¤§ï¼" << endl;
 			}
 		}
 		a <<= 1;
 	}
-
-	return (flag_a ^ flag_b) == 0 ? result : getAddNumber(~result, 1);
+ 
+	return (flagA ^ flagB) == 0 ? result : getAddNumber(~result, 1);
 }
-
-//³ı·¨
+ 
+/*******é™¤æ³•*********/
 int getDivision(int a, int b)
 {
 	if (b == 0)
 	{
-		cout<< "³ıÊı²»ÄÜÎª0£¡£¡"<< endl;
+		cout<< "é™¤æ•°ä¸èƒ½ä¸º0ï¼ï¼"<< endl;
 	}
-
+ 
 	int maxNum = maxNumFlag();
-	int flag_a = 1;
+	int flagA = 1;
 	if ((maxNum & a) != 0)
 	{
-		flag_a = 0; // ¸ºÊı
+		flagA = 0; // è´Ÿæ•°
 		a = getAddNumber(~a, 1);
 	}
-
-	int flag_b = 1;
+ 
+	int flagB = 1;
 	if ((maxNum & b) != 0)
 	{
-		flag_b = 0;
+		flagB = 0;
 		b = getAddNumber(~b, 1);
 	}
-
+ 
 	int index = 1;
 	int tmp = getSubNUm(a, b);
 	if (tmp < 0)
 	{
 		return 0;
 	}
-	
+ 
 	while (tmp >= b)
 	{
-		tmp = getSubNUm(tmp, b); // ×îºóÒ»´ÎÑ­»·ºóµÄtmp ±ãÊÇa/b µÄÓàÊı
+		tmp = getSubNUm(tmp, b); // æœ€åä¸€æ¬¡å¾ªç¯åçš„tmp ä¾¿æ˜¯a/b çš„ä½™æ•°
 		index = getAddNumber(index, 1);
 	}
-	return (flag_a ^ flag_b) == 0 ? index : getAddNumber(~index, 1);
+	return (flagA ^ flagB) == 0 ? index : getAddNumber(~index, 1);
 }
-
+ 
 int getDivision1(int a, int b)
 {
-           
 	if (b == 0)
 	{
-		cout<< "³ıÊı²»ÄÜÎª0£¡£¡"<< endl;
+		cout<< "é™¤æ•°ä¸èƒ½ä¸º0ï¼ï¼"<< endl;
 	}
-
+ 
 	int maxNum = maxNumFlag();
-	int flag_a = 1;
+	int flagA = 1;
 	if ((maxNum & a) != 0)
 	{
-		flag_a = 0; // ¸ºÊı
+		flagA = 0; // è´Ÿæ•°
 		a = getAddNumber(~a, 1);
 	}
-
-	int flag_b = 1;
+ 
+	int flagB = 1;
 	if ((maxNum & b) != 0)
 	{
-		flag_b = 0;
+		flagB = 0;
 		b = getAddNumber(~b, 1);
 	}
-
-	int quotient = 0;
+ 
+    int quotient = 0;
 	int backupB = b;
 	while (a >= b)
 	{
 		int tempB = b << 1;
-		int tempQ = 1;
+		int tempC = 1;
 		while ((tempB <= a) && ((tempB & maxNumFlag()) == 0))
 		{
 			b = tempB;
-			tempQ <<= 1;
+			tempC <<= 1;
 			tempB <<= 1;
 		}
-
+ 
 		a = getSubNUm(a, b);
-		quotient |= tempQ;
+		quotient |= tempC;
 		b = backupB;
 	}
-
+ 
 	if (((maxNum & a) != 0) && (a != 0))
 	{
 		quotient = getAddNumber(quotient, 1);
 	}
-
-	return (flag_a ^ flag_b) == 0 ? quotient : getAddNumber(~quotient, 1);
+ 
+	return (flagA ^ flagB) == 0 ? quotient : getAddNumber(~quotient, 1);
 }
-
+ 
 int main()
 {
 	cout << getAddNumber(-2, 8) << endl;
-
 	cout << getAddNumber1(10, 999999) << endl;
-	
 	cout << getAddNumber2(-2, -30) << endl;
-
+ 
 	cout << getSubNUm(100, -3) << endl;
-
+ 
 	cout << getMultip(-30, 6) << endl;
-
+ 
 	cout << getDivision(42,3) << endl;
+	cout << getDivision1(6,2) << endl;
 
-	cout << getDivision(13,2) << endl;
 	return 0;
 }
